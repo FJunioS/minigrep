@@ -45,9 +45,13 @@ pub fn run(
         search(&config.query, &contents)
     };
 
-    for line in &results {
-        println!("{line}");
-    };
+    if results.is_empty() {
+        println!("No results found for query: {}", config.query);
+    } else {
+        for line in &results {
+            println!("{line}");
+        };
+    }
 
     Ok(())
 }
