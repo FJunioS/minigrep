@@ -2,7 +2,6 @@ use std::iter;
 use std::{env, fs, error::Error};
 use std::vec::Vec;
 
-#[derive(Debug)]
 pub struct Config {
     pub query: String,
     pub file_path: String,
@@ -13,9 +12,8 @@ impl Config {
     pub fn build(
         mut args: impl Iterator<Item = String> + iter::ExactSizeIterator,
     ) -> Result<Self, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments")
-        }
+
+        args.next();
         let query = match args.next() {
             Some(arg) => arg,
             None => return Err("Didn't get a query string")
@@ -40,17 +38,16 @@ pub fn run(
     config: Config
 ) ->  Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
-    let results;
 
-    if config.ignore_case {
-     results = search_case_insensitive(&config.query, &contents);
+    let results = if config.ignore_case {
+        search_case_insensitive(&config.query, &contents)
     } else {
-     results = search(&config.query, &contents);
+        search(&config.query, &contents)
     };
 
-    for line in results {
-        println!("{line}")
-    }
+    for line in &results {
+        println!("{line}");
+    };
 
     Ok(())
 }
