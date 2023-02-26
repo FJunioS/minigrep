@@ -7,9 +7,6 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Se for {}", &config.query);
-    println!("In file {}", &config.file_path);
-
     if let Err(err) = run(config) {
         eprint!("Errrrrrr, e: {err}");
         process::exit(1)
